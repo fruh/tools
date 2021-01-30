@@ -4,6 +4,7 @@ import http.server
 import socketserver
 import argparse
 
+
 pac_path = 'proxy.pac'
 
 parser = argparse.ArgumentParser(description='Creates HTTP server to serve PAC file. The PAC file proxies only defined hosts.', 
