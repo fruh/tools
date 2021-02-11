@@ -37,4 +37,4 @@ for val in $fuzz_list; do
 	echo "  --> $val"
 done
 
-IFS=_FIELD_SEPARATOR
+IFS=$_FIELD_SEPARATOR
