@@ -9,12 +9,9 @@ pac_path = 'proxy.pac'
 
 parser = argparse.ArgumentParser(description='Creates HTTP server to serve PAC file. The PAC file proxies only defined hosts.', 
     usage='''servepac "*.example.com"
-
 Example of the served PAC available at http://127.0.0.1:8000/''' + pac_path + ''':
-
 function FindProxyForURL(url, host) {
     PROXY = "PROXY 127.0.0.1:8080"
-
     // host via proxy
     if (shExpMatch(host,"*.example.com")) {
         return PROXY;
