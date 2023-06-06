@@ -1,0 +1,58 @@
+#!/bin/bash
+check_command () {
+	if ! command -v $1 &> /dev/null
+	then
+		echo "command not found: $1"
+	    exit 1
+	fi
+}
+
+if [ "$1" == "" ]; then
+	echo "usage: `basename $0` app.apk"
+
+	exit 1;
+fi
+
+if [ ! -e "$1" ]; then
+	echo "'${1}' does not exists"
+	exit 1
+fi
+
+check_command keytool
+check_command apksigner
+check_command zipalign
+
+KEYFILE="/tmp/android-apk-sign.keystore"
+APKFILE="$1"
+
+if [ ! -e "$KEYFILE" ]; then 
+	echo "Generating temporary keystore: ${KEYFILE}"
+	keytool -storepass aaaaaa -genkey -v -keystore "$KEYFILE" -alias alias_name -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=myn, OU=myou, O=myo, L=myl, ST=myst, C=myc"
+else
+	echo "Using temporary keystore: ${KEYFILE}"
+fi
+
+echo "Create tmp file ..."
+
+cp -v "${APKFILE}" "${APKFILE}.tmp"
+
+echo "ZIP allign apk ..."
+
+zipalign -f 4 "${APKFILE}.tmp" "${APKFILE}"
+
+rm -v "${APKFILE}.tmp"
+
+echo "Sign apk ..."
+apksigner sign --ks-pass pass:aaaaaa --ks "${KEYFILE}" --ks-key-alias alias_name "${APKFILE}"
+
+[ $? != 0 ] && _enforce_min_sdk="--min-sdk-version 26"
+
+if [ ! -z "$_enforce_min_sdk" ]; then
+	echo "WARNING: min SDK 26 enforced by --min-sdk-version 26"
+	
+	apksigner sign --min-sdk-version 26 --ks-pass pass:aaaaaa --ks "${KEYFILE}" --ks-key-alias alias_name "${APKFILE}"
+fi
+
+echo "Verify apk ..."
+
+apksigner verify $_enforce_min_sdk -v "${APKFILE}" | grep scheme
