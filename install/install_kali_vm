@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cat << EOF > /etc/sudoers.d/user-nopasswd
+user ALL=(ALL) NOPASSWD:ALL
+EOF
+
+# ln -s /media/psf/workspace /home/user/
+
+sudo apt install --upgrade -y budgie-desktop meld tilix jadx docker.io docker-compose
