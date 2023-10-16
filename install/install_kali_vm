@@ -1,9 +1,38 @@
 #!/bin/bash
 
+rm -f /etc/sudoers.d/user-nopasswd
+
 cat << EOF > /etc/sudoers.d/user-nopasswd
 user ALL=(ALL) NOPASSWD:ALL
 EOF
 
 # ln -s /media/psf/workspace /home/user/
 
-sudo apt install --upgrade -y budgie-desktop meld tilix jadx docker.io docker-compose
+sudo apt install --upgrade -y \
+    budgie-desktop \
+    meld \
+    tilix \
+    jadx \
+    docker.io \
+    docker-compose \
+    realtek-rtl88xxau-dkms \
+    routersploit \
+    ssh-audit \
+    mdk4 \
+
+sudo apt install -y python3-sqlalchemy python3-pyqt5 wkhtmltopdf ldap-utils rwho rsh-client x11-apps finger
+
+git clone --depth 1 https://github.com/secforce/sparta.git /tmp/sparta
+sudo mv /tmp/sparta /usr/bin/sparta
+sudo mv /usr/share/sparta/sparta /usr/bin/sparta
+sudo chmod +x /usr/bin/sparta
+
+pip3 install certipy-ad
+
+
+panel=$(python3 -c "a=`dconf read /com/solus-project/budgie-panel/panels`; print(a[0], end='')")
+
+dconf read /com/solus-project/budgie-panel/panels/\{${panel}\}/location
+dconf write /com/solus-project/budgie-panel/panels/\{${panel}\}/location "'top'"
+
+
