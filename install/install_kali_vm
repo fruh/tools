@@ -8,31 +8,47 @@ EOF
 
 # ln -s /media/psf/workspace /home/user/
 
-sudo apt install --upgrade -y \
-    budgie-desktop \
-    meld \
-    tilix \
-    jadx \
-    docker.io \
+apt install --upgrade -y \
     docker-compose \
+    docker.io \
+    finger \
+    jadx \
+    ldap-utils \
+    mdk4 \
+    meld \
+    python3-pyqt5 \
+    python3-sqlalchemy \
     realtek-rtl88xxau-dkms \
     routersploit \
+    rsh-client \
+    rwho \
     ssh-audit \
-    mdk4 \
+    tilix \
+    wkhtmltopdf \
+    x11-apps \
 
-sudo apt install -y python3-sqlalchemy python3-pyqt5 wkhtmltopdf ldap-utils rwho rsh-client x11-apps finger
 
+rm -fR /tmp/sparta /usr/share/sparta
 git clone --depth 1 https://github.com/secforce/sparta.git /tmp/sparta
-sudo mv /tmp/sparta /usr/bin/sparta
-sudo mv /usr/share/sparta/sparta /usr/bin/sparta
-sudo chmod +x /usr/bin/sparta
+mv /tmp/sparta /usr/share/sparta
+mv /usr/share/sparta/sparta /usr/bin/sparta
+chmod +x /usr/bin/sparta
 
 pip3 install certipy-ad
 
 
-panel=$(python3 -c "a=`dconf read /com/solus-project/budgie-panel/panels`; print(a[0], end='')")
+# apt install --upgrade -y budgie-desktop
+# su user
+# panel=$(python3 -c "a=`dconf read /com/solus-project/budgie-panel/panels`; print(a[0], end='')")
 
-dconf read /com/solus-project/budgie-panel/panels/\{${panel}\}/location
-dconf write /com/solus-project/budgie-panel/panels/\{${panel}\}/location "'top'"
+# dconf read /com/solus-project/budgie-panel/panels/\{${panel}\}/location
+# dconf write /com/solus-project/budgie-panel/panels/\{${panel}\}/location "'top'"
 
+su user
 
+dconf write /org/gnome/shell/extensions/dash-to-dock/dock-position "'LEFT'"
+dconf write /org/gnome/shell/extensions/dash-to-dock/dock-fixed true
+dconf write /org/gnome/shell/extensions/dash-to-dock/extend-height true
+dconf write /org/gnome/shell/extensions/dash-to-dock/dash-max-icon-size 24
+
+exit 
